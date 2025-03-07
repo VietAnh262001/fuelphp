@@ -7,7 +7,7 @@ $(document).ready(function () {
 
     $('.btn-image').click(function (e) {
         e.preventDefault();
-        $('.image').click();
+        inputFile.click();
     })
 
     inputFile.change(function () {
