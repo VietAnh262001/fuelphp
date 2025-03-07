@@ -14,7 +14,12 @@
                 </div>
                 <div class="mb-3">
                     <label for="image" class="form-label">Image</label>
-                    <input type="file" class="form-control" name="image" id="image" placeholder="Image">
+                    <div id="preview-image" style="display: none;">
+                        <img src="#" alt="Preview Image" width="200" height="200" class="mb-3">
+                        <div class="delete-image d-flex justify-content-center align-items-center">x</div>
+                    </div>
+                    <button class="btn btn-secondary btn-image">Add image</button>
+                    <input type="file" class="form-control image" accept="image/jpeg,image/png" hidden name="image">
                 </div>
                 <div class="mb-3">
                     <label for="note" class="form-label">Note</label>

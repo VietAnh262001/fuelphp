@@ -17,6 +17,7 @@ class Controller_Admin_Product extends Controller_Admin_Base
     public function action_create()
     {
         $this->template->title = 'Create Product';
+        $this->template->js = 'admin/product.js';
         $this->template->content = View::forge('admin/product/create');
     }
 

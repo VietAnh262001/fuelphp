@@ -27,6 +27,29 @@
         padding: 12px 100px;
         margin-right: 40px;
     }
+    #preview-image {
+        position: relative;
+        border: 1px solid #333333;
+        width: fit-content;
+        height: 202px;
+        margin-bottom: 20px;
+
+        img {
+            object-fit: contain;
+        }
+    }
+
+    .delete-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        color: #ffffff;
+        background-color: #999999;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+    }
+
 }
 
 .modal-overlay {
