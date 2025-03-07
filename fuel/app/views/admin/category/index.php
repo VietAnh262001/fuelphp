@@ -34,7 +34,7 @@
                         <td><?= $category->note ?></td>
                         <td>
                             <a class="btn btn-primary" href="<?= Uri::create('admin/category/edit/' . $category->id) ?>">Edit</a>
-                            <a class="btn btn-danger" href="<?= Uri::create('admin/category/delete/' . $category->id) ?>">Delete</a>
+                            <a class="btn btn-danger btn-delete" data-url="<?= Uri::create('admin/category/delete/' . $category->id) ?>" href="#">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -48,4 +48,5 @@
             ]); ?>
         </div>
     </div>
+    <?= View::forge('admin/includes/modal_confirm', ['modalId' => 'modal-delete-category']); ?>
 </section>

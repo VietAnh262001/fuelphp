@@ -11,6 +11,8 @@
     <?php echo Asset::css('admin/common.css'); ?>
     <?php echo Asset::css('admin/side-menu.css'); ?>
     <?php if (isset($custom_css)) echo Asset::css($custom_css); ?>
+    <?php echo Asset::js('jquery.min.js'); ?>
+    <?php if (isset($js)) echo Asset::js($js); ?>
 </head>
 <body>
 <?= View::forge('admin/includes/side_menu'); ?>

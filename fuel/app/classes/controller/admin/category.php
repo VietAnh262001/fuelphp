@@ -32,6 +32,7 @@ class Controller_Admin_Category extends Controller_Admin_Base
             ->get();
 
         $this->template->title = 'Categories';
+        $this->template->js = 'admin/category.js';
         $this->template->content = View::forge('admin/category/index', [
             'categories' => $categories,
             'search_name' => $search_name,
@@ -44,30 +45,43 @@ class Controller_Admin_Category extends Controller_Admin_Base
 
     public function action_create()
     {
-        $this->template->title = 'Create Category';
-
+        $errors = [];
         if (Input::method() == 'POST') {
-            $category = Model_Admin_Category::forge(Input::post());
-            if ($category->save()) {
-                Response::redirect('/admin/category/index');
+            $val = Model_Admin_Category::validate('create');
+            if ($val->run()) {
+                $category = Model_Admin_Category::forge(Input::post());
+                if ($category->save()) {
+                    Response::redirect('/admin/category/index');
+                }
+            } else {
+                $errors = $val->error();
             }
         }
-
-        $this->template->content = View::forge('admin/category/create');
+        $this->template->title = 'Create Category';
+        $this->template->content = View::forge('admin/category/create', ['errors' => $errors]);
     }
 
     public function action_edit($id)
     {
+        $errors = [];
         $category = Model_Admin_Category::find($id);
         if (Input::method() == 'POST') {
-            $category->name = Input::post('name');
-            $category->note = Input::post('note');
-            if ($category->save()) {
-                Response::redirect('/admin/category/index');
+            $val = Model_Admin_Category::validate('edit');
+            if ($val->run()) {
+                $category->name = Input::post('name');
+                $category->note = Input::post('note');
+                if ($category->save()) {
+                    Response::redirect('/admin/category/index');
+                }
+            } else {
+                $errors = $val->error();
             }
         }
         $this->template->title = 'Edit Category';
-        $this->template->content = View::forge('admin/category/edit', ['category' => $category]);
+        $this->template->content = View::forge('admin/category/edit', [
+            'category' => $category,
+            'errors' => $errors,
+        ]);
     }
 
     public function action_delete($id)

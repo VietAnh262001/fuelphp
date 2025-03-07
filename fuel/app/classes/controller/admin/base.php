@@ -8,6 +8,7 @@ class Controller_Admin_Base extends Controller_Hybrid
 {
     public $template = 'admin/layout/app';
     public $custom_css = '';
+    public $js = '';
 
     public function before()
     {
@@ -20,7 +21,5 @@ class Controller_Admin_Base extends Controller_Hybrid
         if (!Auth::instance()->check()) {
             Response::redirect('admin/auth/login');
         }
-
-        $this->template->custom_css = $this->custom_css;
     }
 }
