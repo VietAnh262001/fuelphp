@@ -8,6 +8,7 @@ return array (
         2 => '003_create_categories',
         3 => '004_create_products',
         4 => '005_add_note_to_categories',
+        5 => '006_add_status_to_products',
       ),
     ),
     'module' => array(    

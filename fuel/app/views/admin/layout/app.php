@@ -12,6 +12,7 @@
     <?php echo Asset::css('admin/side-menu.css'); ?>
     <?php if (isset($custom_css)) echo Asset::css($custom_css); ?>
     <?php echo Asset::js('jquery.min.js'); ?>
+    <?php echo Asset::js('admin/app.js'); ?>
     <?php if (isset($js)) echo Asset::js($js); ?>
 </head>
 <body>

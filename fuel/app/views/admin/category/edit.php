@@ -8,6 +8,7 @@ use Fuel\Core\Input;
         <h2 class="title">Edit Category</h2>
         <hr>
         <div class="content-page">
+            <?= View::forge('admin/includes/title_notification') ?>
             <form method="post" class="w-50 p-3">
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>

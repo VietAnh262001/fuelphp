@@ -1,9 +1,7 @@
 $(document).ready(function () {
     const inputFile = $('.image');
-    const removeFile = $('input[name="remove_image"]');
     const preview = $('#preview-image');
     const image = preview.find('img');
-    const deleteButton = preview.find('.delete-image');
 
     $('.btn-image').click(function (e) {
         e.preventDefault();
@@ -22,11 +20,16 @@ $(document).ready(function () {
         }
     })
 
-    deleteButton.click(function (e) {
+    $('.btn-delete').click(function (e) {
         e.preventDefault();
 
-        preview.hide();
-        image.attr('src', '#');
-        inputFile.val('');
+        let url = $(this).data('url');
+        $('#btn-submit').attr('href', url);
+        $('#modal-delete-product').fadeIn();
+    })
+
+    $('.btn-cancel, #modal-delete-product').click(function (e) {
+        if (e.target !== this) return;
+        $('#modal-delete-product').fadeOut();
     })
 })

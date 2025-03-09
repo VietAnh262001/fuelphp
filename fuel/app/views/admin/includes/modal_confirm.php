@@ -1,4 +1,4 @@
-<div id="<?= $modalId ?? 'modal-confirm' ?>" data-bs-backdrop="true" class="modal-overlay" style="display: none;">
+<div id="<?= $id ?? 'modal-confirm' ?>" data-bs-backdrop="true" class="modal-overlay" style="display: none;">
     <div class="modal-box">
         <h3 id="modalTitle">Xác nhận</h3>
         <p id="modalMessage">Bạn có chắc chắn muốn thực hiện hành động này không?</p>
