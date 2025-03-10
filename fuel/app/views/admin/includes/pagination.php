@@ -5,9 +5,9 @@
                 <div class="d-none flex-sm-fill d-sm-flex align-items-sm-center justify-content-sm-between">
                     <div class="me-3">
                         <p class="small text-grey fs-16">
-                            <span class="fw-semibold"><?= number_format($total) ?></span> 件中
+                            <span class="fw-semibold"><?= number_format($total) ?></span> results
                             <span class="fw-semibold"><?= $first_item ?></span> ～
-                            <span class="fw-semibold"><?= $last_item ?></span> 件を表示
+                            <span class="fw-semibold"><?= $last_item ?></span> showing
                         </p>
                     </div>
 

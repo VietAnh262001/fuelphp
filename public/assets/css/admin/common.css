@@ -50,6 +50,10 @@
         height: 20px;
     }
 
+    .image {
+        object-fit: contain;
+    }
+
 }
 
 .modal-overlay {

@@ -10,21 +10,9 @@ class Controller_Admin_Category extends Controller_Admin_Base
     public function action_index()
     {
         $query = Model_Admin_Category::query();
-        $search_name = Input::get('search_name');
-        if ($search_name) {
-            $query->where('name', 'like', '%' . $search_name . '%');
-        }
+        $query = $this->handle_search($query);
         $total = $query->count();
-
-        $config = [
-            'name' => 'default',
-            'total_items'    => $total,
-            'per_page'       => 5,
-            'uri_segment'    => 4,
-        ];
-        $search_params = ['search_name' => $search_name];
-        $config['pagination_url'] = Uri::create('/admin/category/index', [], $search_params);
-        $pagination = Pagination::forge('mypagination', $config);
+        $pagination = $this->handle_pagination($total, '/admin/category/index');
 
         $categories = $query
             ->rows_limit($pagination->per_page)
@@ -32,16 +20,29 @@ class Controller_Admin_Category extends Controller_Admin_Base
             ->order_by('id', 'desc')
             ->get();
 
-        $this->template->title = 'Categories';
-        $this->template->js = 'admin/category.js';
-        $this->template->content = View::forge('admin/category/index', [
-            'categories' => $categories,
-            'search_name' => $search_name,
+        $data_pagination = [
             'pagination' => $pagination->render(),
             'total' => $total,
             'first_item' => $pagination->offset + 1,
             'last_item' => min($pagination->offset + $pagination->per_page, $total),
+        ];
+
+        $this->template->title = 'Categories';
+        $this->template->js = 'admin/category.js';
+        $this->template->content = View::forge('admin/category/index', [
+            'categories' => $categories,
+            'data_pagination' => $data_pagination,
+            'search' => Input::get(),
         ]);
+    }
+
+    private function handle_search($query)
+    {
+        $name = Input::get('name');
+        if ($name) {
+            $query->where('name', 'like', '%' . $name . '%');
+        }
+        return $query;
     }
 
     public function action_create()
@@ -52,7 +53,7 @@ class Controller_Admin_Category extends Controller_Admin_Base
             if ($val->run()) {
                 $category = Model_Admin_Category::forge(Input::post());
                 if ($category->save()) {
-                    Session::setFlash('success', 'Category has been created');
+                    Session::set_flash('success', 'Category has been created');
                     Response::redirect('/admin/category/index');
                 } else {
                     Session::set_flash('error', 'Could not save category');
@@ -69,6 +70,10 @@ class Controller_Admin_Category extends Controller_Admin_Base
     {
         $errors = [];
         $category = Model_Admin_Category::find($id);
+        if (!$category) {
+            throw new HttpNotFoundException();
+        }
+
         if (Input::method() == 'POST') {
             $val = Model_Admin_Category::validate('edit');
             if ($val->run()) {

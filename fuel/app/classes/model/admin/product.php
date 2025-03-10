@@ -31,23 +31,23 @@ class Model_Admin_Product extends Orm\Model
             ->add_rule('required')
             ->add_rule('min_length', 1)
             ->add_rule('max_length', 255)
-            ->set_error_message('required', '{field} is required.')
-            ->set_error_message('min_length', '{field} must be at least {param} characters.')
-            ->set_error_message('max_length', '{field} must be less than {param} characters.');
+            ->set_error_message('required', 'Name is required')
+            ->set_error_message('min_length', 'Name must be at least 1 characters')
+            ->set_error_message('max_length', 'Name must be less than 255 characters');
         $val->add('category_id', 'Category')
             ->add_rule('required')
-            ->set_error_message('required', '{field} is required.');
+            ->set_error_message('required', 'Category is required');
         $val->add('price', 'Price')
             ->add_rule('required')
             ->add_rule('match_pattern', '#^\d{1,10}$#')
-            ->set_error_message('required', '{field} is required.')
-            ->set_error_message('match_pattern', '{field} must be at least {param} characters.');
+            ->set_error_message('required', 'Price is required')
+            ->set_error_message('match_pattern', 'Price only numeric characters');
         $val->add('image', 'Image')
             ->add_rule('match_pattern', '#\.(jpeg|jpg|png)$#i')
-            ->set_error_message('match_pattern', '{field} must be a PNG or JPEG image.');
+            ->set_error_message('match_pattern', 'Image must be a PNG or JPEG image');
         $val->add('note', 'Note')
             ->add_rule('max_length', 1000)
-            ->set_error_message('max_length', '{field} must be less than {param} characters.');
+            ->set_error_message('max_length', 'Note must be less than 1000 characters');
 
         return $val;
     }

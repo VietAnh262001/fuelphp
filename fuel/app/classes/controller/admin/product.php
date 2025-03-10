@@ -10,7 +10,37 @@ class Controller_Admin_Product extends Controller_Admin_Base
     public function action_index()
     {
         $query = Model_Admin_Product::query();
+        $query = $this->handle_search($query);
+        $total = $query->count();
 
+        $pagination = $this->handle_pagination($total, '/admin/product/index');
+
+        $products = $query
+            ->rows_limit($pagination->per_page)
+            ->rows_offset($pagination->offset)
+            ->order_by('id', 'desc')
+            ->get();
+
+        $data_pagination = [
+            'pagination' => $pagination->render(),
+            'total' => $total,
+            'first_item' => $pagination->offset + 1,
+            'last_item' => min($pagination->offset + $pagination->per_page, $total),
+        ];
+
+        $categories = Model_Admin_Category::find('all');
+        $this->template->title = 'Products';
+        $this->template->js = 'admin/product.js';
+        $this->template->content = View::forge('admin/product/index', [
+            'products' => $products,
+            'categories' => $categories,
+            'data_pagination' => $data_pagination,
+            'search' => Input::get(),
+        ]);
+    }
+
+    private function handle_search($query)
+    {
         $name = Input::get('name');
         if (!empty($name)) {
             $query->where('name', 'like', '%' . $name . '%');
@@ -36,45 +66,7 @@ class Controller_Admin_Product extends Controller_Admin_Base
             $query->where('price', '>=', $price_min);
         }
 
-        $total = $query->count();
-
-        $config = [
-            'name' => 'default',
-            'total_items'    => $total,
-            'per_page'       => 5,
-            'uri_segment'    => 4,
-        ];
-
-        $search_params = [
-            'name'       => Input::get('name', ''),
-            'category_id' => Input::get('category_id', ''),
-            'status'     => Input::get('status', ''),
-            'price_min'  => Input::get('price_min', ''),
-            'price_max'  => Input::get('price_max', ''),
-        ];
-
-        $config['pagination_url'] = Uri::create('/admin/product/index', [], $search_params);
-
-        $pagination = Pagination::forge('mypagination', $config);
-
-        $products = $query
-            ->rows_limit($pagination->per_page)
-            ->rows_offset($pagination->offset)
-            ->order_by('id', 'desc')
-            ->get();
-
-        $categories = Model_Admin_Category::find('all');
-        $this->template->title = 'Products';
-        $this->template->js = 'admin/product.js';
-        $this->template->content = View::forge('admin/product/index', [
-            'products' => $products,
-            'categories' => $categories,
-            'pagination' => $pagination->render(),
-            'total' => $total,
-            'first_item' => $pagination->offset + 1,
-            'last_item' => min($pagination->offset + $pagination->per_page, $total),
-            'search' => compact('name', 'category_id', 'status', 'price_max', 'price_min'),
-        ]);
+        return $query;
     }
 
     public function action_create()
@@ -87,21 +79,7 @@ class Controller_Admin_Product extends Controller_Admin_Base
 
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 if ($val->run()) {
-                    $image_name = '';
-                    if (!empty($_FILES['image']['name'])) {
-                        $upload_path = DOCROOT . 'uploads/';
-                        $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                        $new_name = pathinfo($_FILES['image']['name'], PATHINFO_FILENAME) . '_' . date('YmdHis') . '.' . $extension;
-                        $file_path = $upload_path . $new_name;
-
-                        if (!is_dir($upload_path)) {
-                            mkdir($upload_path, 0777, true);
-                        }
-
-                        if (move_uploaded_file($_FILES['image']['tmp_name'], $file_path)) {
-                            $image_name = $new_name;
-                        }
-                    }
+                    $image_name = $this->handle_image($_FILES['image']);
 
                     $product = Model_Admin_Product::forge([
                         'category_id' => Input::post('category_id'),
@@ -122,7 +100,7 @@ class Controller_Admin_Product extends Controller_Admin_Base
                     $errors = $val->error();
                 }
             } else {
-                $errors['image'] = 'image chua upload';
+                $errors['image'] = 'Image is required';
             }
         }
 
@@ -138,7 +116,7 @@ class Controller_Admin_Product extends Controller_Admin_Base
     {
         $product = Model_Admin_Product::find($id);
         if (!$product) {
-            Response::redirect('/admin/product/index');
+            throw new HttpNotFoundException();
         }
         $categories = Model_Admin_Category::find('all');
         $errors = [];
@@ -147,30 +125,10 @@ class Controller_Admin_Product extends Controller_Admin_Base
             $val = Model_Admin_Product::validate('edit');
 
             if ($val->run()) {
-                $image_name = $product->image;
-
-                if (!empty($_FILES['image']['name'])) {
-                    $upload_path = DOCROOT . 'uploads/';
-                    $extension = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-                    $new_name = pathinfo($_FILES['image']['name'], PATHINFO_FILENAME) . '_' . date('YmdHis') . '.' . $extension;
-                    $file_path = $upload_path . $new_name;
-
-                    if (!is_dir($upload_path)) {
-                        mkdir($upload_path, 0777, true);
-                    }
-
-                    if (move_uploaded_file($_FILES['image']['tmp_name'], $file_path)) {
-                        if (!empty($product->image) && file_exists($upload_path . $product->image)) {
-                            unlink($upload_path . $product->image);
-                        }
-                        $image_name = $new_name;
-                    }
-                }
-
                 $product->category_id = Input::post('category_id');
                 $product->name = Input::post('name');
                 $product->price = Input::post('price');
-                $product->image = $image_name;
+                $product->image = $this->handle_image($_FILES['image'], $product->image);
                 $product->status = Input::post('status', $product->status);
                 $product->note = Input::post('note');
 
@@ -192,6 +150,29 @@ class Controller_Admin_Product extends Controller_Admin_Base
             'categories' => $categories,
             'errors' => $errors,
         ]);
+    }
+
+    private function handle_image($file, $current_image = null)
+    {
+        if (!empty($file['name'])) {
+            $upload_path = DOCROOT . 'uploads/';
+            $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $new_name = pathinfo($file['name'], PATHINFO_FILENAME) . '_' . date('YmdHis') . '.' . $extension;
+            $file_path = $upload_path . $new_name;
+
+            if (!is_dir($upload_path)) {
+                mkdir($upload_path, 0777, true);
+            }
+
+            if (move_uploaded_file($file['tmp_name'], $file_path)) {
+                if ($current_image && file_exists($upload_path . $current_image)) {
+                    unlink($upload_path . $current_image);
+                }
+                return $new_name;
+            }
+        }
+        return $current_image;
+
     }
 
     public function action_delete($id)

@@ -4,24 +4,14 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <?php echo Asset::css('bootstrap.css'); ?>
-
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <?php echo Asset::css('admin/auth.css'); ?>
+    <?php echo Asset::js('jquery.min.js'); ?>
+    <?php echo Asset::js('admin/app.js'); ?>
 </head>
 <body>
     <div class="login-container">
         <h3 class="text-center">Login</h3>
+        <?= View::forge('admin/includes/title_notification') ?>
         <form method="post">
             <div class="mb-3">
                 <label for="username" class="form-label">User name</label>
@@ -39,6 +29,9 @@
                 <button type="submit" class="btn btn-primary px-4">Login</button>
             </div>
         </form>
+        <div class="d-flex justify-content-center mt-2">
+            <a href="<?= Uri::create('admin/auth/register') ?>">Register?</a>
+        </div>
     </div>
 </body>
 </html>

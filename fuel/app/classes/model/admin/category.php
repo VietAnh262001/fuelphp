@@ -17,8 +17,9 @@ class Model_Admin_Category extends Orm\Model
     {
         $val = Validation::forge($factory);
         $val->add_field('name', 'Name', 'required|min_length[1]|max_length[255]')
-            ->set_error_message('required', 'Vui long nhap category');
-        $val->add_field('note', 'Note', 'max_length[255]');
+            ->set_error_message('required', 'Name is required');
+        $val->add_field('note', 'Note', 'max_length[255]')
+            ->set_error_message('max_length[255]', 'Note must be less than 255 characters.');
         return $val;
     }
 }
