@@ -6,6 +6,11 @@ use Fuel\Core\Response;
 
 class Controller_Admin_Auth extends Controller
 {
+    /**
+     * Action login
+     *
+     * @return mixed
+     */
     public function action_login()
     {
         if (Auth::check()) {
@@ -22,30 +27,40 @@ class Controller_Admin_Auth extends Controller
                 if ($group_id == 50 || $group_id == 100) {
                     $remember ? Auth::remember_me() : Auth::dont_remember_me();
 
-                    Session::set_flash('success', 'Đăng nhập thành công');
+                    Session::set_flash('success', 'Log in successfully');
                     Response::redirect('admin/dashboard');
                 } else {
                     Auth::logout();
-                    Session::set_flash('error', 'Bạn không có quyền try cập');
+                    Session::set_flash('error', 'You do not have access');
                     Response::redirect('admin/dashboard');
                 }
             } else {
-                Session::set_flash('error', 'Tên đăng nhập hoặc mật khẩu không đúng');
+                Session::set_flash('error', 'Incorrect username or password');
             }
         }
 
         return View::forge('admin/auth/login');
     }
 
+    /**
+     * Action logout
+     *
+     * @return void
+     */
     public function action_logout()
     {
-        Auth::instance()->logout();
+        Auth::logout();
         Auth::dont_remember_me();
 
-        Session::set_flash('success', 'Đã đăng xuất');
+        Session::set_flash('success', 'Signed out');
         Response::redirect('admin/auth/login');
     }
 
+    /**
+     * Action register
+     *
+     * @return mixed
+     */
     public function action_register()
     {
         $errors = [];

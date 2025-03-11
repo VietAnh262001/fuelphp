@@ -39,8 +39,30 @@ return array(
 	 */
 
 	'hello(/:name)?' => array('welcome/hello', 'name' => 'hello'),
+
+    // Dashboard
     'admin' => 'admin/dashboard/index',
+
+    // Auth
     'admin/login' => 'admin/auth/login',
     'admin/logout' => 'admin/auth/logout',
     'admin/dashboard' => 'admin/dashboard/index',
+
+    // User
+    'admin/user' => 'admin/user/index',
+    'admin/user/edit/(:num)' => 'admin/user/edit/$1',
+    'admin/user/delete/(:num)' => 'admin/user/delete/$1',
+    'admin/user/reset_password/(:num)' => 'admin/user/reset_password/$1',
+
+    // Category
+    'admin/category'              => 'admin/category/index',
+    'admin/category/create'       => 'admin/category/create',
+    'admin/category/edit/(:num)'  => 'admin/category/edit/$1',
+    'admin/category/delete/(:num)'=> 'admin/category/delete/$1',
+
+    // Product
+    'admin/product'               => 'admin/product/index',
+    'admin/product/create'        => 'admin/product/create',
+    'admin/product/edit/(:num)'   => 'admin/product/edit/$1',
+    'admin/product/delete/(:num)' => 'admin/product/delete/$1',
 );

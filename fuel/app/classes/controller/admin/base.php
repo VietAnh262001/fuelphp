@@ -14,22 +14,29 @@ class Controller_Admin_Base extends Controller_Hybrid
     {
         parent::before();
 
-        if (!Auth::check() && Auth::check_remembered()) {
-            Auth::force_login(Auth::get_user_id()[1]);
-        }
-
         if (!Auth::check()) {
-            Response::redirect('admin/auth/login');
+            if (Auth::get_user_id()) {
+                Auth::force_login(Auth::get_user_id()[1]);
+            } else {
+                Response::redirect('admin/auth/login');
+            }
         }
 
         $group_id = Auth::get_groups()[0][1];
         if ($group_id != 50 && $group_id != 100) {
             Auth::logout();
-            Session::set_flash('error', 'Bạn không có quyền truy cập.');
+            Session::set_flash('error', 'You do not have access');
             Response::redirect('admin/auth/login');
         }
     }
 
+    /**
+     * Handle pagination
+     *
+     * @param $total
+     * @param $url
+     * @return mixed
+     */
     protected function handle_pagination($total, $url)
     {
         $config = [
@@ -42,6 +49,11 @@ class Controller_Admin_Base extends Controller_Hybrid
         return Pagination::forge('mypagination', $config);
     }
 
+    /**
+     * Is admin
+     *
+     * @return bool
+     */
     protected function is_admin()
     {
         $group_id = Auth::get_groups()[0][1];

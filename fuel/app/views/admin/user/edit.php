@@ -27,7 +27,8 @@ use Fuel\Core\Input;
                     </select>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary px-4">Edit</button>
+                    <button type="submit" class="btn btn-primary px-4 mr-4">Edit</button>
+                    <a href="<?= Uri::create('admin/user/reset_password/' . $user->id) ?>" type="button" class="btn btn-secondary px-4">Reset password</a>
                 </div>
             </form>
         </div>

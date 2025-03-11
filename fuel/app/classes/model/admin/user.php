@@ -54,4 +54,20 @@ class Model_Admin_User extends Orm\Model
 
         return $val;
     }
+
+    public static function validate_change_password()
+    {
+        $val = Validation::forge();
+
+        $val->add_field('old_password', 'Old password', 'required')
+            ->set_error_message('required', 'Old password is required');
+        $val->add_field('new_password', 'New password', 'required|min_length[3]')
+            ->set_error_message('required', 'New password is required')
+            ->set_error_message('min_length', 'New password must be at least 3 characters long');
+        $val->add_field('confirm_password', 'Confirm Password', 'required|match_field[new_password]')
+            ->set_error_message('required', 'Confirm Password is required')
+            ->set_error_message('match_field', 'New password does not match');
+
+        return $val;
+    }
 }

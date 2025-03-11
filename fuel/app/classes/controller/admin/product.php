@@ -7,6 +7,11 @@ use Fuel\Core\Session;
 
 class Controller_Admin_Product extends Controller_Admin_Base
 {
+    /**
+     * Action index product
+     *
+     * @return void
+     */
     public function action_index()
     {
         $query = Model_Admin_Product::query();
@@ -39,6 +44,12 @@ class Controller_Admin_Product extends Controller_Admin_Base
         ]);
     }
 
+    /**
+     * Handle search product
+     *
+     * @param $query
+     * @return mixed
+     */
     private function handle_search($query)
     {
         $name = Input::get('name');
@@ -69,6 +80,12 @@ class Controller_Admin_Product extends Controller_Admin_Base
         return $query;
     }
 
+    /**
+     * Action create product
+     *
+     * @return void
+     * @throws Exception
+     */
     public function action_create()
     {
         $categories = Model_Admin_Category::find('all');
@@ -112,6 +129,13 @@ class Controller_Admin_Product extends Controller_Admin_Base
         ]);
     }
 
+    /**
+     * Action edit product
+     *
+     * @param $id
+     * @return void
+     * @throws Exception
+     */
     public function action_edit($id)
     {
         $product = Model_Admin_Product::find($id);
@@ -152,6 +176,13 @@ class Controller_Admin_Product extends Controller_Admin_Base
         ]);
     }
 
+    /**
+     * Handle image product
+     *
+     * @param $file
+     * @param $current_image
+     * @return mixed|string|null
+     */
     private function handle_image($file, $current_image = null)
     {
         if (!empty($file['name'])) {
@@ -175,6 +206,13 @@ class Controller_Admin_Product extends Controller_Admin_Base
 
     }
 
+    /**
+     * Action delete product
+     *
+     * @param $id
+     * @return void
+     * @throws Exception
+     */
     public function action_delete($id)
     {
         $product = Model_Admin_Product::find($id);

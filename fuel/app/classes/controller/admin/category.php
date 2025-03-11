@@ -7,6 +7,11 @@ use Fuel\Core\Session;
 
 class Controller_Admin_Category extends Controller_Admin_Base
 {
+    /**
+     * Action index category
+     *
+     * @return void
+     */
     public function action_index()
     {
         $query = Model_Admin_Category::query();
@@ -36,6 +41,12 @@ class Controller_Admin_Category extends Controller_Admin_Base
         ]);
     }
 
+    /**
+     * Handle search category
+     *
+     * @param $query
+     * @return mixed
+     */
     private function handle_search($query)
     {
         $name = Input::get('name');
@@ -45,6 +56,12 @@ class Controller_Admin_Category extends Controller_Admin_Base
         return $query;
     }
 
+    /**
+     * Action create category
+     *
+     * @return void
+     * @throws Exception
+     */
     public function action_create()
     {
         $errors = [];
@@ -66,6 +83,13 @@ class Controller_Admin_Category extends Controller_Admin_Base
         $this->template->content = View::forge('admin/category/create', ['errors' => $errors]);
     }
 
+    /**
+     * Action edit category
+     *
+     * @param $id
+     * @return void
+     * @throws Exception
+     */
     public function action_edit($id)
     {
         $errors = [];
@@ -96,6 +120,13 @@ class Controller_Admin_Category extends Controller_Admin_Base
         ]);
     }
 
+    /**
+     * Action delete
+     *
+     * @param $id
+     * @return void
+     * @throws Exception
+     */
     public function action_delete($id)
     {
         if ($category = Model_Admin_Category::find($id)) {
