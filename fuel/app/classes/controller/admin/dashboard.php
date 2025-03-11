@@ -11,7 +11,7 @@ class Controller_Admin_Dashboard extends Controller_Admin_Base {
      */
     public function action_index()
     {
-        $username = Auth::get('username');
+        $username = Auth::get_screen_name();
         $this->template->title = 'Dashboard';
         $this->template->content = View::forge('admin/dashboard/index', ['username' => $username]);
     }
