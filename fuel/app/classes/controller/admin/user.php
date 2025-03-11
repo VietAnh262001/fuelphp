@@ -179,6 +179,8 @@ class Controller_Admin_User extends Controller_Admin_Base
         }
 
         $this->template->title = 'Change Password';
-        $this->template->content = View::forge('admin/user/change_password', ['errors' => $errors]);
+        $this->template->content = View::forge('admin/user/change_password', [
+            'errors' => $errors
+        ]);
     }
 }

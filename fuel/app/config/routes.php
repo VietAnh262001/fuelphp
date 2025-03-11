@@ -53,6 +53,7 @@ return array(
     'admin/user/edit/(:num)' => 'admin/user/edit/$1',
     'admin/user/delete/(:num)' => 'admin/user/delete/$1',
     'admin/user/reset_password/(:num)' => 'admin/user/reset_password/$1',
+    'admin/user/change_password' => 'admin/user/change_password',
 
     // Category
     'admin/category'              => 'admin/category/index',

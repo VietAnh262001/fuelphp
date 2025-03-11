@@ -24,7 +24,10 @@ class Controller_Admin_Auth extends Controller
 
             if (Auth::login($username, $password)) {
                 $group_id = Auth::get_groups()[0][1];
-                if ($group_id == 50 || $group_id == 100) {
+                if (
+                    $group_id == Model_Admin_User::GROUP_MODERATOR ||
+                    $group_id == Model_Admin_User::GROUP_ADMIN
+                ) {
                     $remember ? Auth::remember_me() : Auth::dont_remember_me();
 
                     Session::set_flash('success', 'Log in successfully');
@@ -73,7 +76,12 @@ class Controller_Admin_Auth extends Controller
                 $username = Input::post('username');
                 $password = Input::post('password');
 
-                $user = Auth::create_user($username, $password, $email, 1);
+                $user = Auth::create_user(
+                    $username,
+                    $password,
+                    $email,
+                    Model_Admin_User::GROUP_USER
+                );
 
                 if ($user) {
                     Session::set_flash('success', 'register successfully');

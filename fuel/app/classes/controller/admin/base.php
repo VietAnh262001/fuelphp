@@ -23,7 +23,10 @@ class Controller_Admin_Base extends Controller_Hybrid
         }
 
         $group_id = Auth::get_groups()[0][1];
-        if ($group_id != 50 && $group_id != 100) {
+        if (
+            $group_id != Model_Admin_User::GROUP_MODERATOR &&
+            $group_id != Model_Admin_User::GROUP_ADMIN
+        ) {
             Auth::logout();
             Session::set_flash('error', 'You do not have access');
             Response::redirect('admin/auth/login');
@@ -57,7 +60,7 @@ class Controller_Admin_Base extends Controller_Hybrid
     protected function is_admin()
     {
         $group_id = Auth::get_groups()[0][1];
-        if ($group_id != 100) {
+        if ($group_id != Model_Admin_User::GROUP_ADMIN) {
             return false;
         }
         return true;
