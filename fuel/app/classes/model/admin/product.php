@@ -27,6 +27,7 @@ class Model_Admin_Product extends Orm\Model
     public static function validate($factory)
     {
         $val = Validation::forge($factory);
+        $val->add_callable('Rule\\MyRules');
         $val->add('name', 'Name')
             ->add_rule('required')
             ->add_rule('min_length', 1)
@@ -42,9 +43,13 @@ class Model_Admin_Product extends Orm\Model
             ->add_rule('match_pattern', '#^\d{1,10}$#')
             ->set_error_message('required', 'Price is required')
             ->set_error_message('match_pattern', 'Price only numeric characters');
-        $val->add('image', 'Image')
-            ->add_rule('match_pattern', '#\.(jpeg|jpg|png)$#i')
-            ->set_error_message('match_pattern', 'Image must be a PNG or JPEG image');
+
+        if ($factory === 'create') {
+            $val->add('image', 'Image')
+                ->add_rule('required_image', 'image')
+                ->set_error_message('required_image', 'Image is required');
+        }
+
         $val->add('note', 'Note')
             ->add_rule('max_length', 1000)
             ->set_error_message('max_length', 'Note must be less than 1000 characters');

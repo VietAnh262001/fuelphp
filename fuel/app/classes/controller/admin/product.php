@@ -94,7 +94,6 @@ class Controller_Admin_Product extends Controller_Admin_Base
         if (Input::method() == 'POST') {
             $val = Model_Admin_Product::validate('create');
 
-            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 if ($val->run()) {
                     $image_name = $this->handle_image($_FILES['image']);
 
@@ -116,9 +115,6 @@ class Controller_Admin_Product extends Controller_Admin_Base
                 } else {
                     $errors = $val->error();
                 }
-            } else {
-                $errors['image'] = 'Image is required';
-            }
         }
 
         $this->template->title = 'Create Product';

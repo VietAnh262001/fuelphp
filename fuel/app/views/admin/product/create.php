@@ -41,6 +41,7 @@
                     <?php if (!empty($errors['image'])): ?>
                         <p class="text-error"><?= $errors['image'] ?></p>
                     <?php endif; ?>
+                    <p class="text-error text-error-image"></p>
                 </div>
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
